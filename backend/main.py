@@ -1,4 +1,4 @@
-```python
+
 from datetime import datetime, timedelta
 
 from fastapi import FastAPI
@@ -156,4 +156,3 @@ def health() -> dict[str, str]:
     return {
         "status": "ok"
     }
-```
