@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>VoiceKhata</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="app-shell">
+    <section id="splash" class="screen splash active">
+      <div class="logo-mark">VK</div>
+      <h1>Voice<span>Khata</span></h1>
+      <p>Apna khata, aapki awaaz</p><button class="primary" data-go="login">Get started</button>
+    </section>
+    <section id="login" class="screen auth">
+      <div class="logo-small">VoiceKhata</div>
+      <h2>Welcome back</h2>
+      <p>Manage your customers with confidence.</p>
+      <form id="login-form"><label>Mobile number<input id="login-phone" type="tel" inputmode="numeric" maxlength="10"
+            placeholder="Enter 10-digit mobile number" autocomplete="tel" required></label>
+        <p id="login-error" class="error" role="alert"></p><button class="primary" type="submit">Continue</button>
+      </form>
+    </section>
+    <section id="dashboard" class="screen page">
+      <header>
+        <div>
+          <div class="logo-small">VoiceKhata</div><small id="dashboard-greeting">Good day, shopkeeper</small>
+        </div><button id="dashboard-avatar" class="avatar" data-go="profile">H</button>
+      </header>
+      <div id="api-status" class="status">Loading your khata…</div>
+      <h2>Overview</h2>
+      <div class="stat-grid">
+        <article><small>Today's sales</small><strong id="today-sales">₹—</strong></article>
+        <article><small>Outstanding credit</small><strong id="outstanding">₹—</strong></article>
+        <article><small>Customers</small><strong id="customer-count">—</strong></article>
+      </div><button class="voice-cta" data-go="voice-transaction"><span>🎙</span>
+        <div><b>Add by voice</b><small>Speak a new transaction</small></div><i>›</i>
+      </button>
+      <div class="section-title">
+        <h3>Recent transactions</h3><button class="text-btn" data-go="reports">Reports</button>
+      </div>
+      <div id="recent-transactions" class="list">
+        <p class="muted">Loading transactions…</p>
+      </div>
+      <nav><button class="nav-active" data-go="dashboard">⌂<span>Home</span></button><button
+          data-go="customers">♙<span>Customers</span></button><button
+          data-go="voice-transaction">🎙<span>Voice</span></button><button
+          data-go="reports">▥<span>Reports</span></button><button data-go="profile">☻<span>Profile</span></button></nav>
+    </section>
+    <section id="voice-transaction" class="screen page centered"><button class="back" data-go="dashboard">‹
+        Back</button>
+      <div class="logo-small">Voice transaction</div>
+      <h2>Tell me what happened</h2>
+      <p class="muted">Example: “Ramesh ko 1200 rupaye ka saman udhaar diya.”</p><button id="record-button" class="mic"
+        aria-label="Start voice recording">🎙</button>
+      <p id="recording-status" class="muted">Tap the microphone to speak</p><textarea id="manual-transcription"
+        placeholder="Or type a transaction in Hindi / English"></textarea><button id="extract-button"
+        class="primary">Extract transaction</button>
+      <p id="voice-error" class="error" role="alert"></p>
+    </section>
+    <section id="processing" class="screen page centered">
+      <div class="loader"></div>
+      <h2>Understanding your transaction</h2>
+      <p class="muted">Checking the details before anything is saved…</p>
+    </section>
+    <section id="confirmation" class="screen page"><button class="back" data-go="voice-transaction">‹ Back</button>
+      <h2>Confirm transaction</h2>
+      <p id="extraction-note" class="muted"></p>
+      <form id="confirmation-form" class="form-card"><label>Customer<select
+            id="confirm-customer"></select></label><label>Amount<input id="confirm-amount" type="number" min="1"
+            step="0.01" required></label><label>Item<input id="confirm-item" required></label><label>Type<select
+            id="confirm-type">
+            <option value="credit">Credit / Udhaar</option>
+            <option value="payment">Payment received</option>
+          </select></label><label>Description<input id="confirm-description" placeholder="Optional note"></label><button
+          type="button" id="add-customer-toggle" class="text-btn">+ Add new customer</button>
+        <div id="new-customer-fields" hidden><label>New customer name<input id="new-customer-name"></label><label>Phone
+            number<input id="new-customer-phone" type="tel" inputmode="numeric" maxlength="10"
+              placeholder="10-digit mobile number"></label></div>
+        <div class="button-row"><button type="button" class="secondary" data-go="dashboard">Cancel</button><button
+            class="primary" type="submit">Confirm & save</button></div>
+      </form>
+      <p id="save-error" class="error"></p>
+    </section>
+    <section id="customers" class="screen page">
+      <header>
+        <div>
+          <div class="logo-small">VoiceKhata</div>
+          <h2>Customers</h2>
+        </div><button class="back" data-go="dashboard">Home</button>
+      </header>
+      <div id="customer-list" class="list">
+        <p class="muted">Loading customers…</p>
+      </div>
+      <nav><button data-go="dashboard">⌂<span>Home</span></button><button class="nav-active"
+          data-go="customers">♙<span>Customers</span></button><button
+          data-go="voice-transaction">🎙<span>Voice</span></button><button
+          data-go="reports">▥<span>Reports</span></button><button data-go="profile">☻<span>Profile</span></button></nav>
+    </section>
+    <section id="customer-details" class="screen page"><button class="back" data-go="customers">‹ Customers</button>
+      <div id="customer-detail"></div>
+      <h3>Transaction history</h3>
+      <div id="customer-history" class="list"></div>
+    </section>
+    <section id="assistant" class="screen page centered"><button class="back" data-go="dashboard">‹ Back</button>
+      <div class="logo-small">Voice Assistant</div>
+      <h2>Ask about your khata</h2>
+      <p class="muted">Try: “Ramesh ka kitna udhaar hai?”</p>
+      <div class="ask-box"><input id="assistant-question" placeholder="Ask a question"><button
+          id="ask-button">Ask</button></div><button id="assistant-record" class="small-mic">🎙 Ask with voice</button>
+      <div id="assistant-answer" class="answer-card" hidden></div>
+      <p id="assistant-error" class="error"></p>
+    </section>
+    <section id="reports" class="screen page"><button class="back" data-go="dashboard">‹ Back</button>
+      <h2>Reports</h2>
+      <div class="stat-grid report-grid">
+        <article><small>Daily sales</small><strong id="report-daily">₹—</strong></article>
+        <article><small>Weekly sales</small><strong id="report-weekly">₹—</strong></article>
+        <article><small>Total payments</small><strong id="report-payments">₹—</strong></article>
+      </div>
+      <h3>Sales this week</h3>
+      <div id="sales-chart" class="chart"></div>
+      <p class="muted">Bars are calculated from saved credit transactions.</p>
+    </section>
+    <section id="profile" class="screen page centered"><button class="back" data-go="dashboard">‹ Back</button><button
+        id="profile-avatar" class="avatar large" type="button">H</button>
+      <h2 id="profile-store-heading">Harshika's Store</h2>
+      <p class="muted">VoiceKhata MVP · Local prototype</p>
+      <form id="profile-form" class="form-card"><label>Your name<input id="profile-name" required maxlength="80"
+            autocomplete="name"></label><label>Store name<input id="profile-store-name" required maxlength="100"
+            autocomplete="organization"></label><label>Phone number<input id="profile-phone" type="tel"
+            inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" required></label>
+        <p id="profile-error" class="error" role="alert"></p><button class="primary" type="submit">Save profile</button>
+      </form><button class="secondary" data-go="assistant">Open Voice Assistant</button>
+    </section>
+  </main>
+  <div id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+
+</html>
