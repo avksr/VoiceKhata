@@ -28,5 +28,7 @@ VoiceKhata is currently a **demo/MVP**. The project is intended to demonstrate v
 ##
 
 ---
+Live Demo Link: https://voicekhata-frontend-jjtk.onrender.com
+---
 
 Built with ❤️ for a simple voice-first Khata experience.
