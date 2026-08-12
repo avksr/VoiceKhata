@@ -735,7 +735,7 @@ async function saveTransaction(event) {
 
 function loadProfile() {
   const profile = state.profile || {
-    name: "Harshika", store: "Harshika's Store", phone: ""
+    name: "Dinesh Gupta", store: "Gupta General Store", phone: ""
   };
   if ($("#profile-name")) $("#profile-name").value = profile.name;
   if ($("#profile-store-name")) $("#profile-store-name").value = profile.store;
