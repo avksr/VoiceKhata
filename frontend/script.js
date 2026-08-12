@@ -83,7 +83,7 @@ function transactionRow(tx, clickable = false) {
   return `
     <button
       class="list-item"
-      ${clickable ? `data-customer-id="${tx.customer_id}"` : 'type="button"'}
+      ${clickable ? `data-customer-id="${tx.customer_id}"` : "type=\"button\""}
     >
       <span class="initial">
         ${(tx.customer_name || tx.item || "T")[0]}
@@ -141,7 +141,7 @@ async function refreshDashboard() {
 
     if (status) {
       status.textContent =
-        "Your data is synced with the VoiceKhata database.";
+        "Your data is synced with the local database.";
     }
   } catch (error) {
     if (status) {
@@ -151,7 +151,7 @@ async function refreshDashboard() {
 
     if ($("#recent-transactions")) {
       $("#recent-transactions").innerHTML =
-        `<p class="error">Backend unavailable. Please try again.</p>`;
+        `<p class="error">Start FastAPI, then refresh this page.</p>`;
     }
   }
 }
@@ -663,7 +663,6 @@ async function saveTransaction(event) {
           method: "POST",
           body: JSON.stringify({ name, phone })
         });
-
         customerId = newCustomer.id;
       }
     }
@@ -734,123 +733,31 @@ async function saveTransaction(event) {
   }
 }
 
-/* ================================
-   PROFILE
-================================ */
-
 function loadProfile() {
-  let savedProfile = null;
-
-  try {
-    savedProfile =
-      JSON.parse(
-        localStorage.getItem("voicekhata_profile")
-      );
-  } catch {
-    savedProfile = null;
-  }
-
-  const profile = savedProfile || {
-    name: "",
-    store: "",
-    phone: ""
+  const profile = state.profile || {
+    name: "Harshika", store: "Harshika's Store", phone: ""
   };
-
-  state.profile = profile;
-
-  if ($("#profile-name")) {
-    $("#profile-name").value = profile.name;
-  }
-
-  if ($("#profile-store-name")) {
-    $("#profile-store-name").value = profile.store;
-  }
-
-  if ($("#profile-phone")) {
-    $("#profile-phone").value = profile.phone;
-  }
-
-  updateProfileUI(profile);
-}
-
-function updateProfileUI(profile) {
-  const name =
-    profile?.name?.trim() || "Your Name";
-
-  const store =
-    profile?.store?.trim() || "Your Shop";
-
-  if ($("#profile-store-heading")) {
-    $("#profile-store-heading").textContent =
-      store;
-  }
-
-  if ($("#dashboard-avatar")) {
-    $("#dashboard-avatar").textContent =
-      profile?.name?.trim()
-        ? profile.name.trim()[0].toUpperCase()
-        : "?";
-  }
-
-  if ($("#profile-avatar")) {
-    $("#profile-avatar").textContent =
-      profile?.name?.trim()
-        ? profile.name.trim()[0].toUpperCase()
-        : "?";
-  }
+  if ($("#profile-name")) $("#profile-name").value = profile.name;
+  if ($("#profile-store-name")) $("#profile-store-name").value = profile.store;
+  if ($("#profile-phone")) $("#profile-phone").value = profile.phone;
 }
 
 function saveProfile(event) {
   event.preventDefault();
-
-  const name =
-    $("#profile-name")?.value.trim();
-
-  const store =
-    $("#profile-store-name")?.value.trim();
-
-  const phone =
-    $("#profile-phone")?.value.trim();
-
-  if (!name) {
-    $("#profile-error").textContent =
-      "Please enter your name.";
+  const name = $("#profile-name")?.value.trim();
+  const store = $("#profile-store-name")?.value.trim();
+  const phone = $("#profile-phone")?.value.trim();
+  if (!name || !store || !/^\d{10}$/.test(phone || "")) {
+    $("#profile-error").textContent = "Enter your name, store name, and a valid 10-digit phone number.";
     return;
   }
-
-  if (!store) {
-    $("#profile-error").textContent =
-      "Please enter your shop name.";
-    return;
-  }
-
-  if (!/^\d{10}$/.test(phone || "")) {
-    $("#profile-error").textContent =
-      "Please enter a valid 10-digit phone number.";
-    return;
-  }
-
-  state.profile = {
-    name,
-    store,
-    phone
-  };
-
-  localStorage.setItem(
-    "voicekhata_profile",
-    JSON.stringify(state.profile)
-  );
-
+  state.profile = { name, store, phone };
   $("#profile-error").textContent = "";
-
-  updateProfileUI(state.profile);
-
+  if ($("#profile-store-heading")) $("#profile-store-heading").textContent = store;
+  if ($("#dashboard-avatar")) $("#dashboard-avatar").textContent = name[0].toUpperCase();
+  if ($("#profile-avatar")) $("#profile-avatar").textContent = name[0].toUpperCase();
   toast("Profile saved.");
 }
-
-/* ================================
-   AI ASSISTANT
-================================ */
 
 async function ask(question) {
   const cleanQuestion =
@@ -893,10 +800,6 @@ async function ask(question) {
   }
 }
 
-/* ================================
-   NAVIGATION
-================================ */
-
 document.addEventListener(
   "click",
   (event) => {
@@ -916,7 +819,6 @@ document.addEventListener(
 
     if (customer) {
       event.preventDefault();
-
       openCustomer(
         customer.dataset.customerId
       );
@@ -1021,10 +923,6 @@ document.addEventListener(
   }
 );
 
-/* ================================
-   FORMS
-================================ */
-
 const confirmationForm =
   $("#confirmation-form");
 
@@ -1035,43 +933,21 @@ if (confirmationForm) {
   );
 }
 
-const loginForm =
-  $("#login-form");
-
+const loginForm = $("#login-form");
 if (loginForm) {
-  loginForm.addEventListener(
-    "submit",
-    (event) => {
-      event.preventDefault();
-
-      const phone =
-        $("#login-phone")?.value.trim() || "";
-
-      if (!/^\d{10}$/.test(phone)) {
-        $("#login-error").textContent =
-          "Please enter a valid 10-digit mobile number.";
-        return;
-      }
-
-      $("#login-error").textContent = "";
-
-      show("dashboard");
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const phone = $("#login-phone")?.value.trim() || "";
+    if (!/^\d{10}$/.test(phone)) {
+      $("#login-error").textContent = "Please enter a valid 10-digit mobile number.";
+      return;
     }
-  );
+    $("#login-error").textContent = "";
+    show("dashboard");
+  });
 }
 
-const profileForm =
-  $("#profile-form");
-
-if (profileForm) {
-  profileForm.addEventListener(
-    "submit",
-    saveProfile
-  );
-}
-
-/* ================================
-   START APP
-================================ */
+const profileForm = $("#profile-form");
+if (profileForm) profileForm.addEventListener("submit", saveProfile);
 
 show("splash");
